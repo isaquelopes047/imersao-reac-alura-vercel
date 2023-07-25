@@ -44,7 +44,7 @@ export const StyledRegisterVideo = styled.div`
     z-index: 100;
     display: flex;
     justify-content: center;
-    & > div {
+    & > div { 
       flex: 1;
       border-radius: 8px;
       max-width: 320px;
