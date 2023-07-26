@@ -1,4 +1,5 @@
 import React from 'react';
+import { createClient } from '@supabase/supabase-js'
 import { StyledRegisterVideo } from "./styles";
 
 /* criando meu hook de formulario */
@@ -21,13 +22,22 @@ function useForm(propsDoForm) {
     }
 }
 
+const PROJECT_URL = 'https://cnsjqiscwhqpobuykvka.supabase.co'
+const PROJECT_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuc2pxaXNjd2hxcG9idXlrdmthIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTAzODMwOTgsImV4cCI6MjAwNTk1OTA5OH0.6-XCE460Y-w_iPfQtmw6W9aW_HASqalbqnyI1jMeNwg'
+const supabase = createClient(PROJECT_URL, PROJECT_KEY)
+
+// PEGAR A THUMB DE UMA URL DO YOUTUBE
+function getThumbnail(url){
+    return `https://img.youtube.com/vi/${url.split('v=')[1]}/hqdefault.jpg`;
+}
+
 export default function RegisterVideo() {
 
     const formCadastro = useForm({
         /* valores iniciais do form recebidos por Props */
         initialValues: {
             titulo: "Frost Punk",
-            url: "https://youtube/..."
+            url: "https://www.youtube.com/watch?v=O8jtAyPuhNg"
         }
     });
 
@@ -44,6 +54,20 @@ export default function RegisterVideo() {
                         evento.preventDefault();
                         formCadastro.clearForm();
                         setFormVisivel(false)
+
+                        supabase.from('aluratube').insert({
+                            title: formCadastro.values.titulo,
+                            url: formCadastro.values.url,
+                            thumb: getThumbnail(formCadastro.values.url),
+                            playlist: "jogos"
+                        })
+                        .then(() => {
+
+                        })
+                        .catch(( error ) => {
+                            console.log( error )
+                        })
+
                     }}>
                         <div>
                             <button type="button" className="close-modal" onClick={() => setFormVisivel(false)}>
